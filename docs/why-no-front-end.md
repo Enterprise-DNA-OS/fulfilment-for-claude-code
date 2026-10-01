@@ -1,24 +1,15 @@
-# Why there is no front end
+# Why no front end
 
-Mintsoft is a database with a subscription. The tables underneath it are ordinary: a few entities, a few relationships, a handful of workflows you repeat every week. What you pay for is the layer on top that lets people who do not write SQL get at those tables. Screens, filters, dashboards, forms.
+The base is a database, one command line tool and agent recipes for a fulfilment office: the pick wave, despatch, stock, returns, client billing and the record checks. Read-only HTML views show the week, the exceptions, stock and billing. Packing slips, client statements, stock reports and returns notes come from the same records.
 
-That layer used to be the whole product, because talking to a database was hard. It is not hard any more. Open this folder in Claude Code, describe what you want, and it writes the query, runs it, and explains the answer. Ask a question the dashboard never had a chart for and you still get an answer.
+What a screen gives that this does not:
 
-## What you gain
+- **Scanning at the bench.** Packers scan barcodes on a handheld or a bench scanner. This base records a pick as one command per order. A scanner screen is a custom build.
+- **Courier labels.** It records the service and tracking number. It does not book a carrier or print a label.
+- **Live shop feeds.** Shopify, marketplace and WooCommerce orders arrive here by import or by command. A live connection is a custom build.
+- **A client portal.** Clients get a branded report or statement. They do not log in.
+- **Several people at once.** The embedded database is for one operator. For a team, set `DATABASE_URL` to a secured Postgres with backups and individual logins.
 
-- **Better answers.** A dashboard shows what the vendor decided to chart. Here you ask your own question, in your own words, and get it answered against your own data.
-- **No seats.** Everyone who needs to look can look. The bill does not grow with headcount.
-- **Your data in your Postgres.** Plain tables. Back them up, query them from anything, leave any time. There is no export step because there is nothing to leave.
-- **A process that matches you.** When your way of working changes, you add a command. You do not wait for a feature request to clear.
+Those are the parts Enterprise DNA builds into your version when you need them. What you keep: every order, SKU, bin and charge in a database you own, and any question you can put into words answered from it.
 
-## What you give up
-
-- **A visual board.** Stages are a table you ask about, not cards you drag.
-- **A phone app.** It runs where Claude Code runs.
-- **A vendor help desk.** This is open source. Enterprise DNA supports the installed version for businesses that want someone to call.
-
-## Who this fits
-
-Small teams who already use Claude Code, or who would rather learn to ask than learn another interface. If your team needs a screen to look at all day, keep Mintsoft. If you need the answers more than the screens, this is cheaper, faster and yours.
-
-Installed and run for you: https://enterprisedna.co/omni/instead-of/mintsoft
+Billing runs are charge records for review, not tax invoices. Storage is counted on today's bins for each started week of the period. Approved runs are not changed through the tool; correct them with a reviewed adjustment in your accounts.

@@ -1,11 +1,41 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
+    "name": "packing-slip",
+    "title": "Packing slip",
+    "for_each": "select id, number as name from orders where status in ('open','picked')",
     "file": "name",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      { "title": "Deliver to", "sql": "select o.number, o.recipient_name, o.address, o.postcode, o.country, o.required_by from orders o where o.id = $1" },
+      { "title": "Items", "sql": "select p.sku, p.name as product, l.quantity, case when p.dangerous_goods then 'Dangerous goods' else '' end as handling from order_lines l join products p on p.id = l.product_id where l.order_id = $1 order by p.sku" }
+    ]
+  },
+  {
+    "name": "client-statement",
+    "title": "Client fulfilment statement",
+    "for_each": "select id, name from clients",
+    "file": "name",
+    "sections": [
+      { "title": "Charges by billing run", "note": "A charge statement prepared for review. Your accounts system issues the tax invoice.", "sql": "select r.name, r.period_from, r.period_to, r.status, l.currency, l.kind, l.units, l.rate_cents, l.amount_cents from charge_lines l join charge_runs r on r.id = l.run_id where l.client_id = $1 order by r.period_to desc, l.kind" },
+      { "title": "Despatch against agreed days, last 28 days", "sql": "select despatched_28d, on_time_28d, late_28d, on_time_pct, late_now from sla_view where client_id = $1" }
+    ]
+  },
+  {
+    "name": "stock-report",
+    "title": "Client stock report",
+    "for_each": "select id, name from clients",
+    "file": "name",
+    "sections": [
+      { "title": "Stock on hand", "sql": "select sku, product, on_hand, allocated, available, reorder_point from product_stock_view where client_id = $1 and active order by sku" },
+      { "title": "Inbound deliveries", "sql": "select name, expected_on, received_on, note from asns where client_id = $1 order by expected_on" }
+    ]
+  },
+  {
+    "name": "returns-note",
+    "title": "Returns note",
+    "for_each": "select r.id, r.name from returns r",
+    "file": "name",
+    "sections": [
+      { "title": "Return", "sql": "select r.name, o.number as order_number, p.sku, p.name as product, r.quantity, r.reason, r.received_on, r.outcome, r.processed_on from returns r join orders o on o.id = r.order_id join products p on p.id = r.product_id where r.id = $1" }
     ]
   }
 ]

@@ -1,14 +1,36 @@
 [
   {
     "name": "week",
-    "title": "This week",
-    "subtitle": "Fulfilment for Claude Code: what needs attention, rendered by npm run view",
+    "title": "Fulfilment week",
+    "subtitle": "Today's pick wave, what is waiting for the courier, and despatch against the agreed days",
     "sections": [
-      {
-        "title": "Needs attention",
-        "note": "TODO(author): point this at the industry's attention view (overdue, stuck, quiet).",
-        "sql": "select 'replace me' as item, 'TODO(author)' as why"
-      }
+      { "title": "Pick wave", "note": "Open orders, ready to pick first, then by required date.", "sql": "select client, number, required_by, lines, items, has_dg, sla, pick_check from order_view where status = 'open' order by (pick_check = 'Ready to pick') desc, required_by, client, number" },
+      { "title": "Picked, waiting for the courier", "sql": "select client, number, required_by, items, has_dg, sla from order_view where status = 'picked' order by required_by" },
+      { "title": "Despatch against agreed days, last 28 days", "sql": "select client, despatch_days, despatched_28d, on_time_28d, late_28d, on_time_pct, late_now from sla_view order by client" }
+    ]
+  },
+  {
+    "name": "attention",
+    "title": "Needs attention",
+    "sections": [
+      { "title": "Exceptions", "note": "Late and blocked orders, stock to reorder, inbound overdue, returns waiting and missing rates.", "sql": "select issue, reference, client, detail from attention_view order by issue, client, reference" },
+      { "title": "Record checks", "note": "Retention of recipient details and billing records, and dangerous goods services. See docs/compliance.md.", "sql": "select rule, reference, client, finding from compliance_view order by rule, reference" }
+    ]
+  },
+  {
+    "name": "stock",
+    "title": "Stock by client",
+    "sections": [
+      { "title": "Below reorder point", "sql": "select client, sku, product, on_hand, allocated, available, reorder_point from product_stock_view where active and reorder_point > 0 and available <= reorder_point order by available" },
+      { "title": "All SKUs", "sql": "select client, sku, product, on_hand, allocated, available, bins from product_stock_view where active order by client, sku" }
+    ]
+  },
+  {
+    "name": "billing",
+    "title": "Client billing",
+    "sections": [
+      { "title": "Storage this week", "sql": "select client, currency, bins, bin_week_cents, amount_cents from storage_view order by client" },
+      { "title": "Billing runs", "sql": "select r.name, r.period_from, r.period_to, r.status, r.approved_by, c.name as client, l.currency, l.kind, l.units, l.rate_cents, l.amount_cents from charge_lines l join charge_runs r on r.id = l.run_id join clients c on c.id = l.client_id order by r.period_to desc, c.name, l.kind" }
     ]
   }
 ]

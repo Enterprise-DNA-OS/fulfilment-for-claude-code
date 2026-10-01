@@ -1,0 +1,42 @@
+[
+  {
+    "question": "Which orders will miss their required date, and what is holding each one?",
+    "command": "late"
+  },
+  {
+    "question": "Which SKUs are oversold across open orders?",
+    "command": "attention"
+  },
+  {
+    "question": "Which clients fell below their agreed despatch days in the last four weeks?",
+    "command": "sla"
+  },
+  {
+    "question": "Which SKUs need reordering, grouped by client?",
+    "command": "low-stock"
+  },
+  {
+    "question": "Which inbound deliveries are late, and which open orders are short until they land?",
+    "command": "attention"
+  },
+  {
+    "question": "Which picked orders carry dangerous goods, and which services can take them?",
+    "command": "to-despatch"
+  },
+  {
+    "question": "What does each client owe this period for orders, extra items, storage and returns?",
+    "command": "bill"
+  },
+  {
+    "question": "Which returns have waited more than five days for a decision?",
+    "command": "attention"
+  },
+  {
+    "question": "Whose shopper details are past the agreed retention period?",
+    "command": "privacy-due"
+  },
+  {
+    "question": "Which clients have late orders, low stock and no note this month?",
+    "command": "client-review"
+  }
+]
